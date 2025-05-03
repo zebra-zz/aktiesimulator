@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aktiekurser</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>Simulerade aktiekurser</h1>
+    <table border="1">
+        <thead>
+            <tr><th>Aktie</th><th>Pris</th></tr>
+        </thead>
+        <tbody id="prices">
+        </tbody>
+    </table>
+
+    <script>
+        const table = document.getElementById("prices");
+        const socket = new WebSocket("ws://" + location.host + "/ws");
+
+        const rows = {};
+
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            const stock = data.stock;
+            const price = data.price;
+
+            if (!rows[stock]) {
+                const row = document.createElement("tr");
+                const nameCell = document.createElement("td");
+                const priceCell = document.createElement("td");
+
+                nameCell.textContent = stock;
+                priceCell.id = "price-" + stock;
+                row.appendChild(nameCell);
+                row.appendChild(priceCell);
+                table.appendChild(row);
+                rows[stock] = priceCell;
+            }
+
+            rows[stock].textContent = price.toFixed(2);
+        };
+    </script>
+</body>
+</html>

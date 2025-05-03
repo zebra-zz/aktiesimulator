@@ -1,0 +1,7 @@
+pip install fastapi uvicorn
+
+uvicorn main:app --reload
+
+
+# Starta
+http://localhost:8000 
